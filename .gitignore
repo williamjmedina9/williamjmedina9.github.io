@@ -1,0 +1,7 @@
+/.quarto/
+/_site/
+/_to_delete/
+*.zip
+.Rhistory
+
+**/*.quarto_ipynb

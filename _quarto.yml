@@ -1,0 +1,34 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Will Medina"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - text: Projects
+        menu:
+          - href: projects/pitcher-reports.qmd
+            text: Pitcher Reports
+          - href: projects/hitter-reports.qmd
+            text: Hitter Reports
+          - href: projects/catcher-reports.qmd
+            text: Catcher Reports
+          - href: projects/advance-scouting.qmd
+            text: Advance Scouting
+      - href: about.qmd
+        text: About
+    right:
+      - icon: github
+        href: https://github.com/williamjmedina9
+      - icon: linkedin
+        href: https://www.linkedin.com/in/will-medina-915657381
+
+format:
+  html:
+    theme: flatly
+    css: styles.css
+    lightbox: true
+    toc: true

@@ -1,0 +1,34 @@
+---
+title: "Will Medina"
+subtitle: "Director of Analytics · Cal State Northridge Baseball"
+listing:
+  id: featured-projects
+  contents:
+    - projects/pitcher-reports.qmd
+    - projects/hitter-reports.qmd
+    - projects/catcher-reports.qmd
+    - projects/advance-scouting.qmd
+  sort: false
+  type: grid
+  grid-columns: 2
+  fields: [image, title, description]
+---
+
+I currently serve on the coaching staff for Cal State Northridge baseball as their Director of Analytics. My team of student managers and I build the reports and tools our coaching staff uses to evaluate players, guide development, scout opponents, and assess recruits. I bring a unique blend of experience and technical background that I believe make me an asset to any organization. I am a former college player, coach, and data analyst and have a master’s degree in data analytics. I love baseball, am eager to learn, and work well with others. My goal is to work for a Major League front office someday.
+
+[My Work](#projects){.btn .btn-outline-primary .me-2} 
+[Resume](resume.pdf){.btn .btn-outline-primary .me-2}
+[About Me](about.qmd){.btn .btn-outline-primary}
+
+## At a Glance
+
+- **Director of Analytics at CSUN** where I lead a team of four student managers.
+- **Former college player** at D2 Azusa Pacific University, where I was named team captain and won a conference championship.
+- **College coaching experience** as a hitting coach, pitch caller, and first base coach.
+- **Strong technical background** with an M.S. in Business Analytics from Cal Poly Pomona.
+- **Run my own business** providing hitting lessons to hundreds of youth baseball players.
+
+## Projects {#projects}
+
+::: {#featured-projects}
+:::

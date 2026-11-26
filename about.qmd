@@ -1,0 +1,60 @@
+---
+title: "About Me"
+about:
+  template: trestles
+  image: headshot.jpg
+  image-shape: rounded
+  image-width: 14em
+  links:
+    - icon: file-earmark-person
+      text: Resume
+      href: resume.pdf
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/will-medina-915657381
+    - icon: github
+      text: GitHub
+      href: https://github.com/williamjmedina9
+    - icon: envelope
+      text: Email
+      href: mailto:williamjmedina9@gmail.com
+---
+
+## My Story
+
+I grew up in Glendora, California, and was a four-year varsity letter winner at South Hills high school, where I also graduated as valedictorian. I went on to play college baseball at Division II Azusa Pacific University. My best year came in 2023 where I hit .400 and we won a PacWest conference championship. I would eventually be named team captain in my senior season. I graduated in the spring of 2025 with a B.S. in Accounting and a minor in Business Analytics.
+
+After graduating, I stayed at APU as a graduate assistant coach for the 2026 season. I served as the team's hitting coach, scouted opposing offenses, and called pitches during games. Our offense's runs scored per game and our pitching staff's K/BB rate both improved over 10% in that span. During the same year, I earned my Master's in Business Analytics from Cal Poly Pomona.
+
+In the summer of 2026, I joined the coaching staff at Cal State Northridge as Director of Analytics.
+
+## What I Do at CSUN
+
+In my current role, I oversee four student managers, and together we run the program's analytics. We produce every tool and report the coaching staff uses to evaluate players, guide player development, and assess recruits.
+
+- **Positional reports:** This fall we created pitcher, hitter, and catcher reports and set up workflows to automate the process so that they can be produced at regular intervals throughout the season.
+- **Advance scouting:** I lead our scouting of opposing teams, building the reports and delivering insights the staff uses for pitch calling, defensive positioning and lineup construction.
+- **Stuff+:** My own project, a Big West Stuff+ model to grade pitch quality for our pitchers and potential recruits.
+
+## Beyond the Dugout
+
+Over the past five years I have been running my own hitting lessons business, **.406 Baseball Academy**, working with hundreds of kids ages 6-18 throughout the San Gabriel Valley. I manage all the scheduling, advertising, finances, communication with parents, and deliver all the lessons myself.
+
+Away from baseball, I'm usually at a concert or playing guitar. And I'm a lifelong San Francisco Giants fan.
+
+## Education
+
+**California State Polytechnic University, Pomona**
+M.S. Business Analytics, 2026
+
+**Azusa Pacific University**
+B.S. Accounting, Minor in Business Analytics, 2025
+Four-year member of the baseball team · Team captain
+
+## Skills
+
+**Programming and tools:** Python, R, SQL, Excel, Power BI, Tableau, AWS, Artificial Intelligence
+
+**Baseball technology:** TrackMan, Blast Motion, Rapsodo, Synergy, TruMedia, Video Setup/Editing
+
+**Analytics:** Predictive modeling, data visualization, dashboard development, database design, data validation, feature engineering

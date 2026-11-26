@@ -1,0 +1,268 @@
+[
+  {
+    "objectID": "projects/pitcher-reports.html",
+    "href": "projects/pitcher-reports.html",
+    "title": "Pitcher Reports",
+    "section": "",
+    "text": "These internal pitcher reports are created and sent to our pitching coaches after every game. The script uses a TrackMan file to produce one PDF where each pitcher who appeared gets his own one-page report. They tell our coaches how hitters performed against our pitcher, how well he located his pitches, what his release on each pitch looked like, the shape of each pitch, and how his stuff compares to the average mid-major D1 arm. Generating reports for the full staff takes just a few minutes. The same script runs on a single game or on a combined file."
+  },
+  {
+    "objectID": "projects/pitcher-reports.html#overview",
+    "href": "projects/pitcher-reports.html#overview",
+    "title": "Pitcher Reports",
+    "section": "",
+    "text": "These internal pitcher reports are created and sent to our pitching coaches after every game. The script uses a TrackMan file to produce one PDF where each pitcher who appeared gets his own one-page report. They tell our coaches how hitters performed against our pitcher, how well he located his pitches, what his release on each pitch looked like, the shape of each pitch, and how his stuff compares to the average mid-major D1 arm. Generating reports for the full staff takes just a few minutes. The same script runs on a single game or on a combined file."
+  },
+  {
+    "objectID": "projects/pitcher-reports.html#whats-on-the-page",
+    "href": "projects/pitcher-reports.html#whats-on-the-page",
+    "title": "Pitcher Reports",
+    "section": "What’s on the page",
+    "text": "What’s on the page\n\nHitter Performance: BAA, exit velocity, ground-ball and fly-ball rates, and swing, whiff and chase rates, all by batter handedness.\nPitch Location vs RHH / LHH: every pitch plotted on the zone from the pitcher’s view, colored by pitch type.\nPitch Location Breakdown: strike rate for each pitch, plus how often it landed in the heart of the zone, the shadow of the zone, the chase area, or wasted.\nRelease Slot: the pitcher’s average release point drawn on a silhouette scaled to his height and arm slot, with each pitch type’s release point marked.\nPitch Movement: traditional pitch plot using IVB and HB with the mid-major D1 average for that pitch type and handedness included for comparison.\nPitch Characteristics: usage, velocity, spin rate and direction, induced vertical and horizontal break, release height and side, extension, and approach angle for each pitch."
+  },
+  {
+    "objectID": "projects/pitcher-reports.html#sample-output",
+    "href": "projects/pitcher-reports.html#sample-output",
+    "title": "Pitcher Reports",
+    "section": "Sample output",
+    "text": "Sample output\n\n\n\n\n\n\n\n\n\n\nDownload the sample reports (PDF). Player names have been removed."
+  },
+  {
+    "objectID": "projects/pitcher-reports.html#how-it-works",
+    "href": "projects/pitcher-reports.html#how-it-works",
+    "title": "Pitcher Reports",
+    "section": "How it works",
+    "text": "How it works\nThe script reads a raw TrackMan CSV and keeps only our pitchers. Names are matched to the roster in a way that ignores stray spaces and capitalization to handle improper tagging. If a pitcher isn’t on the roster (say a potential recruit), the script asks for his arm slot and height to create his release slot diagram.\nA few decisions that took some thought:\n\nMid-major averages. The mid-major averages are calculated using TrackMan data from teams in the Big West, Mountain West, and West Coast conferences.\nLocation bands. Each band is a fixed distance around a standard strike zone (17 inches wide, 1.5 to 3.5 feet high). Heart is the zone itself, Shadow extends 3 inches beyond each boundary, Chase extends 8 inches wide and 6 inches up and down, and anything beyond that is considered Waste. Pitches are classified based on where they crossed the front of the plate.\nKeeping the location plots readable. In cumulative reports, pitchers can have hundreds of pitches tracked making the location plot unreadable. When there are more than 60, the script takes a sample and matches the each pitch types’ usage against each handedness. The full counts are still used in every table.\nAccounting for ABs/PAs correctly. TrackMan records strikeouts, walks, and hit by pitches in the KorBB column while all balls in play are recorded under PlayResult. The script accounts for this and keeps just one result-bearing pitch per plate appearance to ensure rates are calculated correctly."
+  },
+  {
+    "objectID": "projects/pitcher-reports.html#impact",
+    "href": "projects/pitcher-reports.html#impact",
+    "title": "Pitcher Reports",
+    "section": "Impact",
+    "text": "Impact\nThese reports are produced postgame and sent to our pitching coaches to look over. The next day one of our pitching coaches reviews the report with each pitcher and walks through the takeaways from the outing. Bullpen plans often get rearranged depending on the takeaways. If our pitching coach isn’t satisfied with the shape of a pitcher’s breaking ball, he might call for a pitch design pen on the TrackMan. If he isn’t happy with a pitcher’s fastball command, it might be an execution bullpen day. The reports are used to evaluate the performance and guide the development of our pitchers."
+  },
+  {
+    "objectID": "projects/pitcher-reports.html#whats-next",
+    "href": "projects/pitcher-reports.html#whats-next",
+    "title": "Pitcher Reports",
+    "section": "What’s next",
+    "text": "What’s next\nThe Pitch Characteristics table already has a Stuff+ column. It will be filled in once my Stuff+ model is finished."
+  },
+  {
+    "objectID": "projects/pitcher-reports.html#code",
+    "href": "projects/pitcher-reports.html#code",
+    "title": "Pitcher Reports",
+    "section": "Code",
+    "text": "Code\nOne of the trickier pieces was the usage-weighted sampling for the location plots:\n\n\nShow code\n\ndef sample_zone_pitches(sub, cap=MAX_ZONE_PITCHES, seed=ZONE_SAMPLE_SEED):\n    \"\"\"If there are more than `cap` located pitches, pick `cap` of them so each pitch\n    type keeps its share of usage (largest-remainder rounding so the total is exactly\n    `cap`). Returns (pitches to plot, total located).\"\"\"\n    sub = sub[sub[\"LocSideIn\"].notna() & sub[\"LocHeightIn\"].notna()]\n    n = len(sub)\n    if n &lt;= cap:\n        return sub, n\n\n    counts = sub[\"TaggedPitchType\"].value_counts()\n    exact = counts / n * cap\n    quota = np.floor(exact).astype(int)\n    leftover = cap - int(quota.sum())\n    for pitch in (exact - quota).sort_values(ascending=False, kind=\"stable\").index[:leftover]:\n        quota[pitch] += 1\n\n    parts = [sub[sub[\"TaggedPitchType\"].eq(p)].sample(n=int(q), random_state=seed)\n             for p, q in quota.items() if q &gt; 0]\n    return pd.concat(parts), n\n\nView the full code on GitHub"
+  },
+  {
+    "objectID": "projects/catcher-reports.html",
+    "href": "projects/catcher-reports.html",
+    "title": "Catcher Reports",
+    "section": "",
+    "text": "These catcher reports are created and sent to our catchers and catching coach after every game. The script combines a TrackMan file with our hand-charted tracking data to produce a PDF with a one-page report for each catcher who appeared. They tell our coach how each catcher performed framing, blocking, and throwing out would-be base stealers. The report uses an expected-strike model and run expectancy based blocking and throwing runs to measure each catcher’s impact on the game."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#overview",
+    "href": "projects/catcher-reports.html#overview",
+    "title": "Catcher Reports",
+    "section": "",
+    "text": "These catcher reports are created and sent to our catchers and catching coach after every game. The script combines a TrackMan file with our hand-charted tracking data to produce a PDF with a one-page report for each catcher who appeared. They tell our coach how each catcher performed framing, blocking, and throwing out would-be base stealers. The report uses an expected-strike model and run expectancy based blocking and throwing runs to measure each catcher’s impact on the game."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#whats-on-the-page",
+    "href": "projects/catcher-reports.html#whats-on-the-page",
+    "title": "Catcher Reports",
+    "section": "What’s on the page",
+    "text": "What’s on the page\n\nFraming: a close-up of the strike zone with every called strike and ball in the shadow zone plotted, color coded, and labeled with expected-strike probability. Called strike rate above expected shows the catcher’s framing performance compared to the mid-major D1 average.\nBlocking: blocks made and attempted with runners on, broken down by side and by pitch group, plus the runs credited for successful blocks.\nThrowing: steal attempts, caught stealings, throw velocity, pop times to each base, and runs credited for caught stealings."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#sample-output",
+    "href": "projects/catcher-reports.html#sample-output",
+    "title": "Catcher Reports",
+    "section": "Sample output",
+    "text": "Sample output\n\n\n\n\n\n\n\nDownload the sample report (PDF). Player names have been removed."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#the-expected-strike-model",
+    "href": "projects/catcher-reports.html#the-expected-strike-model",
+    "title": "Catcher Reports",
+    "section": "The expected-strike model",
+    "text": "The expected-strike model\nTo judge framing you need to know how often a pitch in a given spot should be called a strike. The report uses a location-only model; a smoothed grid of called-strike probability every 0.05 ft across the zone, trained on over 90,000 called pitches from 741 games. On a holdout set of 15,546 pitches it predicted a 33.0% strike rate against an actual 32.5% (Brier score: 0.066).\nA catcher’s CStr% minus his xCStr% on a subset of pitches shows whether he’s getting more or less called strikes than the locations deserve. The model doesn’t account for the umpire or the batter’s height."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#turning-blocks-and-throws-into-runs",
+    "href": "projects/catcher-reports.html#turning-blocks-and-throws-into-runs",
+    "title": "Catcher Reports",
+    "section": "Turning blocks and throws into runs",
+    "text": "Turning blocks and throws into runs\nBlocking and throwing runs created are calculated using Fangraphs’ Run Expectancy (RE) tables. A successful block is credited with the difference between the actual situation and the one where every runner moves up a base. A caught stealing is credited with the difference between the runner being safe at the base he tried for and the situation after the out. Failed blocks and successful steals count as zero, so these are totals of credit earned, not net runs saved."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#impact",
+    "href": "projects/catcher-reports.html#impact",
+    "title": "Catcher Reports",
+    "section": "Impact",
+    "text": "Impact\nThese reports are produced postgame and sent to our catchers and catching coach to look over. If a catcher struggled with his blocks on one side of the plate the previous game, his pre-game drill work the next day might focus on improving that area. If the reports consistently show that a catcher struggles receiving on one side of the plate, we might decide not to catch him when particular pitchers who work to that side often throw. The reports are used to evaluate the performance and guide the development of our catchers."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#whats-next",
+    "href": "projects/catcher-reports.html#whats-next",
+    "title": "Catcher Reports",
+    "section": "What’s next",
+    "text": "What’s next\nI plan on changing the throwing section of this report to a more actionable visual. I want to show the pitch location of each pop time plotted in the strike zone so that our catching coach gets a better idea of where a catcher’s transfer is best or needs improvement."
+  },
+  {
+    "objectID": "projects/catcher-reports.html#code",
+    "href": "projects/catcher-reports.html#code",
+    "title": "Catcher Reports",
+    "section": "Code",
+    "text": "Code\nThe run-value credit for blocks and caught stealings:\n\n\nShow code\n\ndef block_credit(table, bases, outs, success):\n    \"\"\"Credit for a successful block: the run value of every runner NOT moving up one\n    base (a runner on third would have scored). Uses only the pre-pitch base/out\n    state; count, batter result and advancement odds aren't modeled. A failed block\n    is worth zero (we only credit positive plays).\"\"\"\n    if not success:\n        return 0.0\n    if not any(bases):\n        raise ValueError(\"A block with empty bases is outside the tracked population\")\n    everyone_advances = (0, bases[0], bases[1])\n    raw = bases[2] + expectancy(table, everyone_advances, outs) - expectancy(table, bases, outs)\n    return max(0.0, raw)\n\n\ndef throwing_credit(table, bases, outs, targets, outcome, advance=False, out_target=None):\n    \"\"\"Credit for a caught stealing: run value if the runner had been safe minus the\n    run value after the out. A safe steal is worth zero.\n    Returns (credit, bases after, runs scored on the play).\"\"\"\n    if outcome == \"safe\":\n        after, runs = steal_result(bases, targets, advance)\n        return 0.0, after, runs\n    if outcome != \"out\":\n        raise ValueError(\"Steal outcome must be safe or out\")\n    if advance:\n        raise ValueError(\"Caught stealing plus advance on throw needs individual runner outcomes\")\n    if len(targets) &gt; 1 and out_target not in targets:\n        raise ValueError(\"A double steal with an out needs OutBase (2 or 3)\")\n\n    out_target = out_target or targets[0]\n    if_safe, safe_runs = steal_result(bases, targets)\n    actual, actual_runs = steal_result(bases, targets, out_target=out_target)\n    credit = (safe_runs + expectancy(table, if_safe, outs)) - (actual_runs + expectancy(table, actual, outs + 1))\n    return max(0.0, credit), actual, actual_runs\n\nView the full code on GitHub"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Will Medina",
+    "section": "",
+    "text": "I currently serve on the coaching staff for Cal State Northridge baseball as their Director of Analytics. My team of student managers and I build the reports and tools our coaching staff uses to evaluate players, guide development, scout opponents, and assess recruits. I bring a unique blend of experience and technical background that I believe make me an asset to any organization. I am a former college player, coach, and data analyst and have a master’s degree in data analytics. I love baseball, am eager to learn, and work well with others. My goal is to work for a Major League front office someday.\nMy Work Resume About Me"
+  },
+  {
+    "objectID": "index.html#at-a-glance",
+    "href": "index.html#at-a-glance",
+    "title": "Will Medina",
+    "section": "At a Glance",
+    "text": "At a Glance\n\nDirector of Analytics at CSUN where I lead a team of four student managers.\nFormer college player at D2 Azusa Pacific University, where I was named team captain and won a conference championship.\nCollege coaching experience as a hitting coach, pitch caller, and first base coach.\nStrong technical background with an M.S. in Business Analytics from Cal Poly Pomona.\nRun my own business providing hitting lessons to hundreds of youth baseball players."
+  },
+  {
+    "objectID": "index.html#projects",
+    "href": "index.html#projects",
+    "title": "Will Medina",
+    "section": "Projects",
+    "text": "Projects\n\n\n\n\n\n\n\n\n\n\nPitcher Reports\n\n\nAutomated reports built from TrackMan data after each outing. Describes pitch movement, location, release point, and more.\n\n\n\n\n\n\n\n\n\n\n\n\nHitter Reports\n\n\nAutomated reports built from cumulative TrackMan data. Provides platoon and pitch type splits, hot and cold zones, plate discipline metrics, and more.\n\n\n\n\n\n\n\n\n\n\n\n\nCatcher Reports\n\n\nAutomated reports built from TrackMan files and hand-charted tracking data. Framing, blocking, and throwing are quantified using an expected-strike model and run expectancy.\n\n\n\n\n\n\n\n\n\n\n\n\nAdvance Scouting\n\n\nScouting reports built in 643 Charts combining data with my own written notes. Includes platoon and pitch type splits, hot and cold zones, spray charts, and more.\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About Me",
+    "section": "",
+    "text": "I grew up in Glendora, California, and was a four-year varsity letter winner at South Hills high school, where I also graduated as valedictorian. I went on to play college baseball at Division II Azusa Pacific University. My best year came in 2023 where I hit .400 and we won a PacWest conference championship. I would eventually be named team captain in my senior season. I graduated in the spring of 2025 with a B.S. in Accounting and a minor in Business Analytics.\nAfter graduating, I stayed at APU as a graduate assistant coach for the 2026 season. I served as the team’s hitting coach, scouted opposing offenses, and called pitches during games. Our offense’s runs scored per game and our pitching staff’s K/BB rate both improved over 10% in that span. During the same year, I earned my Master’s in Business Analytics from Cal Poly Pomona.\nIn the summer of 2026, I joined the coaching staff at Cal State Northridge as Director of Analytics."
+  },
+  {
+    "objectID": "about.html#my-story",
+    "href": "about.html#my-story",
+    "title": "About Me",
+    "section": "",
+    "text": "I grew up in Glendora, California, and was a four-year varsity letter winner at South Hills high school, where I also graduated as valedictorian. I went on to play college baseball at Division II Azusa Pacific University. My best year came in 2023 where I hit .400 and we won a PacWest conference championship. I would eventually be named team captain in my senior season. I graduated in the spring of 2025 with a B.S. in Accounting and a minor in Business Analytics.\nAfter graduating, I stayed at APU as a graduate assistant coach for the 2026 season. I served as the team’s hitting coach, scouted opposing offenses, and called pitches during games. Our offense’s runs scored per game and our pitching staff’s K/BB rate both improved over 10% in that span. During the same year, I earned my Master’s in Business Analytics from Cal Poly Pomona.\nIn the summer of 2026, I joined the coaching staff at Cal State Northridge as Director of Analytics."
+  },
+  {
+    "objectID": "about.html#what-i-do-at-csun",
+    "href": "about.html#what-i-do-at-csun",
+    "title": "About Me",
+    "section": "What I Do at CSUN",
+    "text": "What I Do at CSUN\nIn my current role, I oversee four student managers, and together we run the program’s analytics. We produce every tool and report the coaching staff uses to evaluate players, guide player development, and assess recruits.\n\nPositional reports: This fall we created pitcher, hitter, and catcher reports and set up workflows to automate the process so that they can be produced at regular intervals throughout the season.\nAdvance scouting: I lead our scouting of opposing teams, building the reports and delivering insights the staff uses for pitch calling, defensive positioning and lineup construction.\nStuff+: My own project, a Big West Stuff+ model to grade pitch quality for our pitchers and potential recruits."
+  },
+  {
+    "objectID": "about.html#beyond-the-dugout",
+    "href": "about.html#beyond-the-dugout",
+    "title": "About Me",
+    "section": "Beyond the Dugout",
+    "text": "Beyond the Dugout\nOver the past five years I have been running my own hitting lessons business, .406 Baseball Academy, working with hundreds of kids ages 6-18 throughout the San Gabriel Valley. I manage all the scheduling, advertising, finances, communication with parents, and deliver all the lessons myself.\nAway from baseball, I’m usually at a concert or playing guitar. And I’m a lifelong San Francisco Giants fan."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About Me",
+    "section": "Education",
+    "text": "Education\nCalifornia State Polytechnic University, Pomona M.S. Business Analytics, 2026\nAzusa Pacific University B.S. Accounting, Minor in Business Analytics, 2025 Four-year member of the baseball team · Team captain"
+  },
+  {
+    "objectID": "about.html#skills",
+    "href": "about.html#skills",
+    "title": "About Me",
+    "section": "Skills",
+    "text": "Skills\nProgramming and tools: Python, R, SQL, Excel, Power BI, Tableau, AWS, Artificial Intelligence\nBaseball technology: TrackMan, Blast Motion, Rapsodo, Synergy, TruMedia, Video Setup/Editing\nAnalytics: Predictive modeling, data visualization, dashboard development, database design, data validation, feature engineering"
+  },
+  {
+    "objectID": "projects/advance-scouting.html",
+    "href": "projects/advance-scouting.html",
+    "title": "Advance Scouting",
+    "section": "",
+    "text": "Before a series, our staff gets both a full team overview and a one-page report on every hitter we have information on on the opponent’s roster. Each report describes the skills and weaknesses of the hitter so our coaching staff can strategize the best pitcher matchup, how to position our defense, and how to attack him. I built the report layout using 643 Charts’ team reporting tool, and it populates from the opponent’s season of charted data in minutes. I write the scouting notes at the bottom of each page after watching video."
+  },
+  {
+    "objectID": "projects/advance-scouting.html#overview",
+    "href": "projects/advance-scouting.html#overview",
+    "title": "Advance Scouting",
+    "section": "",
+    "text": "Before a series, our staff gets both a full team overview and a one-page report on every hitter we have information on on the opponent’s roster. Each report describes the skills and weaknesses of the hitter so our coaching staff can strategize the best pitcher matchup, how to position our defense, and how to attack him. I built the report layout using 643 Charts’ team reporting tool, and it populates from the opponent’s season of charted data in minutes. I write the scouting notes at the bottom of each page after watching video."
+  },
+  {
+    "objectID": "projects/advance-scouting.html#whats-on-the-page",
+    "href": "projects/advance-scouting.html#whats-on-the-page",
+    "title": "Advance Scouting",
+    "section": "What’s on the page",
+    "text": "What’s on the page\n\nPlatoon splits: BA, OBP, SLG, wOBA, HR, K%, BB% and HBP, overall and by pitcher handedness.\nHot & cold zones: a heat map of XBH, BA vs FBs by location, and a heat map of whiffs; understand where in the zone his swing is most and least effective.\nSpray charts: every ball in play plotted on a field diagram, helping the defense position themselves and understand the hitter’s bat path.\nPitch-type splits: BA, SLG, whiff rate and hard-hit rate against fastballs, breaking balls, and offspeed pitches from each handedness.\nPlate approach: metrics describing 1st pitch and two strike approach, including zone swing rates, chase rates, and outcomes by pitch type.\nSkills: results against 90+ mph velocity, stolen bases and bunts.\nScouting notes: my written read on his swing and how to pitch him based on video analysis and performance data."
+  },
+  {
+    "objectID": "projects/advance-scouting.html#sample-output",
+    "href": "projects/advance-scouting.html#sample-output",
+    "title": "Advance Scouting",
+    "section": "Sample output",
+    "text": "Sample output\n\n\n\n\n\n\n\n\n\n\nDownload the sample reports (PDF). Player names and photos have been removed."
+  },
+  {
+    "objectID": "projects/advance-scouting.html#impact",
+    "href": "projects/advance-scouting.html#impact",
+    "title": "Advance Scouting",
+    "section": "Impact",
+    "text": "Impact\nPrior to each series, the coaching staff meets to review all scouting reports and gameplan. Our pitching coach uses these hitter reports to plan his pitch selection against each hitter, our infield and outfield coaches use them to position our defense, and our head coaches uses them to make matchup decisions throughout the series. We quickly review the key points with our pitching staff the night before the series begins, so everyone is aligned on the strategy."
+  },
+  {
+    "objectID": "projects/hitter-reports.html",
+    "href": "projects/hitter-reports.html",
+    "title": "Hitter Reports",
+    "section": "",
+    "text": "These hitter reports were sent to our hitting coaches at the conclusion of the fall and will be updated and sent to them periodically throughout the season. The script uses a combined TrackMan file to produce one PDF document where each hitter gets his own one-page report. They tell our coaches about our hitters’ platoon and pitch type splits, how hard they’re hitting the ball and where, pitch locations they’re excelling against and struggling with, and what their swing decisions have been like. Every rate is shown next to the mid-major D1 average for context."
+  },
+  {
+    "objectID": "projects/hitter-reports.html#overview",
+    "href": "projects/hitter-reports.html#overview",
+    "title": "Hitter Reports",
+    "section": "",
+    "text": "These hitter reports were sent to our hitting coaches at the conclusion of the fall and will be updated and sent to them periodically throughout the season. The script uses a combined TrackMan file to produce one PDF document where each hitter gets his own one-page report. They tell our coaches about our hitters’ platoon and pitch type splits, how hard they’re hitting the ball and where, pitch locations they’re excelling against and struggling with, and what their swing decisions have been like. Every rate is shown next to the mid-major D1 average for context."
+  },
+  {
+    "objectID": "projects/hitter-reports.html#whats-on-the-page",
+    "href": "projects/hitter-reports.html#whats-on-the-page",
+    "title": "Hitter Reports",
+    "section": "What’s on the page",
+    "text": "What’s on the page\n\nOverall Stats: PA, AVG, OBP, SLG, OPS, wOBA and HR, overall and by platoon split.\nPitch Type Splits: results against fastballs,breaking balls, and offspeed pitches from each handedness.\nHard Hit and Whiffs: every pitch hit over 90 mph and every pitch swung and missed at plotted in the zone from the hitter’s view.\nContact Quality: average exit velocity, max exit velocity and hard-hit rate.\nSwing Decisions: walk rate, strikeout rate, chase rate and in-zone swing rate.\nSpray Chart: every ball in play on a field diagram, colored by batted-ball type.\nBatted Ball %: ground-ball, line-drive, fly-ball, popup, pull, middle and opposite-field rates."
+  },
+  {
+    "objectID": "projects/hitter-reports.html#sample-output",
+    "href": "projects/hitter-reports.html#sample-output",
+    "title": "Hitter Reports",
+    "section": "Sample output",
+    "text": "Sample output\n\n\n\n\n\n\n\nDownload the sample report (PDF). Player names have been removed."
+  },
+  {
+    "objectID": "projects/hitter-reports.html#how-it-works",
+    "href": "projects/hitter-reports.html#how-it-works",
+    "title": "Hitter Reports",
+    "section": "How it works",
+    "text": "How it works\nThe script combines multiple TrackMan files and keeps only our hitters. It accounts for potential mis-tagged names with improper spacing, capitalization, or spelling. It also recognizes switch hitters and gives them a separate page for each side of the plate.\nA few details:\n\nMid-major averages. The mid-major averages are calculated using TrackMan data from teams in the Big West, Mountain West, and West Coast conferences.\nAvg max exit velocity. Comparing a hitter’s max exit velocity to the single hardest-hit ball in a 200,000 pitch file would make everyone look weak. Instead, the benchmark is the average of each D1 hitter’s personal max, among hitters with at least 20 balls in play.\nSpray charts for LHH. Angles are flipped for left-handed hitters, so “pull” always means pull, and pull, middle and opposite-field rates can be compared across hitters.\nAccounting for ABs/PAs correctly. TrackMan records strikeouts, walks, and hit by pitches in the KorBB column while all balls in play are recorded under PlayResult. The script accounts for this and keeps just one result-bearing pitch per plate appearance to ensure rates are calculated correctly."
+  },
+  {
+    "objectID": "projects/hitter-reports.html#impact",
+    "href": "projects/hitter-reports.html#impact",
+    "title": "Hitter Reports",
+    "section": "Impact",
+    "text": "Impact\nThese reports were produced at the end of the fall and were reviewed with each hitter during individual exit meetings with our hitting coaches. Winter development plans were created based on the insights the reports gave. Some hitters had poor spray charts and were given drills to focus on bat path adjustments. Others had high chase rates and were given drills to improve their feel for the zone. They will be updated and produced periodically throughout the year to track the progress and guide the development of our hitters."
+  },
+  {
+    "objectID": "projects/hitter-reports.html#code",
+    "href": "projects/hitter-reports.html#code",
+    "title": "Hitter Reports",
+    "section": "Code",
+    "text": "Code\nEvery stat line on the page comes from one function:\n\n\nShow code\n\ndef stat_line(pas):\n    \"\"\"AVG / OBP / SLG / OPS / wOBA / HR for a set of plate-appearance-ending pitches.\"\"\"\n    result = pas[\"PlayResult\"]\n    singles = (result == \"Single\").sum()\n    doubles = (result == \"Double\").sum()\n    triples = (result == \"Triple\").sum()\n    hr = (result == \"HomeRun\").sum()\n    bb = (pas[\"KorBB\"] == \"Walk\").sum()\n    hbp = (pas[\"PitchCall\"] == \"HitByPitch\").sum()\n    sac = (result == \"Sacrifice\").sum()\n\n    hits = singles + doubles + triples + hr\n    at_bats = len(pas) - bb - hbp - sac\n    total_bases = singles + 2 * doubles + 3 * triples + 4 * hr\n    obp_denominator = at_bats + bb + hbp + sac\n\n    avg = hits / at_bats if at_bats else 0\n    slg = total_bases / at_bats if at_bats else 0\n    obp = (hits + bb + hbp) / obp_denominator if len(pas) else 0\n\n    w = WOBA_WEIGHTS\n    woba_numerator = (w[\"BB\"] * bb + w[\"HBP\"] * hbp + w[\"1B\"] * singles\n                      + w[\"2B\"] * doubles + w[\"3B\"] * triples + w[\"HR\"] * hr)\n    woba = woba_numerator / obp_denominator if len(pas) else 0\n\n    return {\"PA\": len(pas), \"AVG\": round(avg, 3), \"OBP\": round(obp, 3),\n            \"SLG\": round(slg, 3), \"OPS\": round(obp + slg, 3),\n            \"wOBA\": round(woba, 3), \"HR\": hr}\n\nView the full code on GitHub"
+  }
+]
